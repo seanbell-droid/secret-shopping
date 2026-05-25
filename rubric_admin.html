@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Health · Admin & Ops Journey Rubric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Libre+Baskerville:ital@0;1&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #1C1C1E;
+  --spring: #1B4F72;
+  --spring-mid: #2471A3;
+  --accent: #C0392B;
+  --gold: #B7860B;
+  --rule: #D5D8DC;
+  --pale: #F4F6F7;
+  --white: #FFFFFF;
+  --muted: #626567;
+  --green: #1E8449;
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: #FAFAFA;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ── PAGE HEADER ── */
+.masthead {
+  background: var(--spring);
+  padding: 48px 0 40px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.04);
+}
+.masthead::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: 40%;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.03);
+}
+.masthead-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 1;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #A9CCE3;
+  margin-bottom: 14px;
+}
+.masthead h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  max-width: 560px;
+}
+.masthead-sub {
+  font-size: 15px;
+  color: #A9CCE3;
+  max-width: 520px;
+  line-height: 1.6;
+}
+.masthead-meta {
+  margin-top: 28px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.meta-chip {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px;
+  color: white;
+}
+.meta-chip strong { color: #A9CCE3; margin-right: 4px; }
+
+/* ── BODY ── */
+.body-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
+}
+
+/* ── INTRO LETTER ── */
+.letter {
+  background: var(--white);
+  border-radius: 2px;
+  padding: 44px 48px;
+  margin-top: -2px;
+  border-bottom: 3px solid var(--spring);
+  box-shadow: 0 2px 20px rgba(0,0,0,.06);
+}
+.letter p {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px;
+  color: #2C3E50;
+  line-height: 1.85;
+  margin-bottom: 18px;
+}
+.letter p:last-child { margin-bottom: 0; }
+.letter-sig {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--muted);
+}
+.letter-sig strong { display: block; color: var(--ink); font-size: 15px; }
+
+/* ── SECTION HEADS ── */
+.section {
+  margin-top: 48px;
+}
+.section-number {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--spring-mid);
+  margin-bottom: 6px;
+}
+.section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--spring);
+  margin-bottom: 12px;
+  border-bottom: 1.5px solid var(--rule);
+  padding-bottom: 10px;
+}
+.section p {
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+/* ── TAXONOMY CARDS ── */
+.taxonomy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+.taxon-card {
+  border-radius: 8px;
+  padding: 18px 20px;
+  border-left: 4px solid;
+}
+.taxon-card.dead { background: #FDEDEC; border-color: #C0392B; }
+.taxon-card.broken { background: #F5EEF8; border-color: #7D3C98; }
+.taxon-card.friction { background: #FEF0E7; border-color: #CA6F1E; }
+.taxon-card.missed { background: #E8F8F5; border-color: #1E8449; }
+.taxon-icon { font-size: 20px; margin-bottom: 6px; }
+.taxon-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.taxon-card.dead .taxon-name { color: #C0392B; }
+.taxon-card.broken .taxon-name { color: #7D3C98; }
+.taxon-card.friction .taxon-name { color: #CA6F1E; }
+.taxon-card.missed .taxon-name { color: #1E8449; }
+.taxon-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* ── JOURNEY PANELS ── */
+.journey-tabs {
+  display: flex;
+  gap: 0;
+  margin-top: 20px;
+  border-bottom: 2px solid var(--rule);
+  overflow-x: auto;
+}
+.jtab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: all .2s;
+  user-select: none;
+}
+.jtab.active {
+  color: var(--spring);
+  border-bottom-color: var(--spring);
+}
+.jtab:hover:not(.active) { color: var(--ink); }
+.journey-panel { display: none; padding: 24px 0 0; }
+.journey-panel.active { display: block; }
+
+.journey-header {
+  background: var(--pale);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--spring);
+}
+.journey-header h3 { font-weight: 600; font-size: 16px; color: var(--spring); margin-bottom: 6px; }
+.journey-header p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.6; }
+
+.scenario-block {
+  background: #F0F4F8;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+}
+.scenario-block .scenario-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--spring-mid);
+  margin-bottom: 6px;
+}
+.scenario-block p { font-size: 14px; color: var(--ink); margin: 0; line-height: 1.65; font-style: italic; }
+
+.questions-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.questions-list li {
+  display: flex;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  align-items: flex-start;
+}
+.questions-list li:last-child { border-bottom: none; }
+.q-num {
+  background: var(--spring);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── SCORING GUIDE ── */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  font-size: 14px;
+}
+.score-table th {
+  background: var(--spring);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+}
+.score-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.score-table tr:nth-child(even) td { background: var(--pale); }
+.score-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+}
+.s1 { background: #FDEDEC; color: #C0392B; }
+.s2 { background: #FEF5E7; color: #CA6F1E; }
+.s3 { background: #F0F3F4; color: #5D6D7E; }
+.s4 { background: #EBF5FB; color: #1A5276; }
+.s5 { background: #E9F7EF; color: #1E8449; }
+
+/* ── RULES BOX ── */
+.rules-box {
+  background: white;
+  border: 1.5px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+.rule-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.rule-row:last-child { border-bottom: none; }
+.rule-icon {
+  width: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background: var(--pale);
+  flex-shrink: 0;
+}
+.rule-body {
+  padding: 14px 18px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.rule-body strong { display: block; color: var(--ink); margin-bottom: 2px; }
+.rule-body span { color: var(--muted); }
+
+/* ── TEMPLATE ── */
+.template-section {
+  margin-top: 48px;
+  background: white;
+  border: 2px solid var(--spring);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.template-header {
+  background: var(--spring);
+  padding: 18px 28px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.template-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+}
+.template-header p { font-size: 13px; color: #A9CCE3; margin-top: 2px; }
+.dl-btn {
+  background: white;
+  color: var(--spring);
+  border: none;
+  border-radius: 6px;
+  padding: 9px 20px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.dl-btn:hover { background: #D6EAF8; }
+
+.template-body { padding: 28px; }
+
+.tmpl-field {
+  margin-bottom: 22px;
+}
+.tmpl-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.tmpl-input {
+  width: 100%;
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: white;
+  transition: border-color .2s;
+  outline: none;
+}
+.tmpl-input:focus { border-color: var(--spring-mid); box-shadow: 0 0 0 3px rgba(36,113,163,.1); }
+textarea.tmpl-input { resize: vertical; min-height: 70px; }
+
+.dim-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: start;
+}
+.dim-row.header-row {
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--spring);
+}
+.dim-row.header-row span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--spring);
+}
+.dim-input {
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  padding: 8px 10px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: #FAFAFA;
+  outline: none;
+  transition: border-color .15s;
+}
+.dim-input:focus { border-color: var(--spring-mid); background: white; }
+.dim-input::placeholder { color: #BDC3C7; }
+
+.add-dim-btn {
+  background: transparent;
+  border: 1.5px dashed var(--rule);
+  border-radius: 6px;
+  width: 100%;
+  padding: 10px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all .2s;
+}
+.add-dim-btn:hover { border-color: var(--spring-mid); color: var(--spring); background: var(--pale); }
+
+.remove-dim {
+  background: none;
+  border: none;
+  color: #BDC3C7;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px 4px;
+  align-self: center;
+  transition: color .15s;
+}
+.remove-dim:hover { color: var(--accent); }
+
+.dim-row-wrap {
+  display: flex;
+  align-items: start;
+  gap: 6px;
+}
+
+.export-row {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+.export-note { font-size: 13px; color: var(--muted); max-width: 380px; line-height: 1.5; }
+.export-btns { display: flex; gap: 10px; }
+.btn-copy {
+  background: var(--pale);
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all .18s;
+}
+.btn-copy:hover { border-color: var(--spring-mid); color: var(--spring); }
+.btn-export {
+  background: var(--spring);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+  transition: all .18s;
+}
+.btn-export:hover { background: var(--spring-mid); transform: translateY(-1px); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(70px);
+  background: var(--ink);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 999;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  white-space: nowrap;
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── PRINT ── */
+@media print {
+  .masthead, .journey-tabs, .jtab, .section:not(.print-show), .export-row, .dl-btn, #toast { display: none !important; }
+  .journey-panel { display: block !important; }
+  .template-section { border: 1px solid #ccc; }
+  .add-dim-btn, .remove-dim { display: none; }
+  body { font-size: 12px; }
+}
+
+@media (max-width: 620px) {
+  .masthead-inner, .body-wrap { padding: 0 20px; }
+  .masthead h1 { font-size: 28px; }
+  .letter { padding: 28px 24px; }
+  .taxonomy-grid { grid-template-columns: 1fr; }
+  .dim-row { grid-template-columns: 1fr 1fr; }
+  .dim-row.header-row span:nth-child(n+3) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="eyebrow">Spring Health · Secret Shopping Program</div>
+    <h1>Build Your Journey Rubric</h1>
+    <p class="masthead-sub">A guide for the <strong>Administrative / Ops</strong> journey owner to define what secret shoppers will test — and how findings will be scored and routed.</p>
+    <div class="masthead-meta">
+      <div class="meta-chip"><strong>Deadline:</strong> Return completed rubric by [DATE]</div>
+      <div class="meta-chip"><strong>First shop:</strong> Q3 2026</div>
+      <div class="meta-chip"><strong>Questions:</strong> [Program Owner name]</div>
+    </div>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+  <!-- LETTER -->
+  <div class="letter">
+    <p>Hi [Name],</p>
+    <p>We're launching a secret shopping program at Spring Health — a quarterly process where internal employees walk through our key stakeholder journeys from scratch, as if they have no inside knowledge, and report back on what they actually experience.
+    <p>You're the owner of the <strong>Administrative / Ops</strong> experience. That means you're best positioned to define what should be tested — the operational requests that members, employers, and providers make of our ops functions every day.</p>
+    <p>Your journey is structured as a set of discrete sub-shops: <strong>medical records requests, billing disputes, crisis escalation, data reporting requests, and complaint handling</strong>. Each is a separate scenario that can be run by a different shopper.</p>
+    <p>This page will walk you through the background, then give you a template to fill out. <strong>We need your completed rubric back by [DATE].</strong> The rubric you build becomes the scorecard every shopper uses, and the basis for how we track improvement over time.</p>
+    <p>The member experience rubric has already been built by Bharat — yours is one of three we still need to define. No prior experience with secret shopping required.; this guide walks you through everything.</p>
+    <div class="letter-sig">
+      <strong>[Program Owner Name]</strong>
+      [Title] · Spring Health
+    </div>
+  </div>
+
+  <!-- SECTION 1: WHAT IS THIS -->
+  <div class="section">
+    <div class="section-number">Section 01</div>
+    <h2>What Is Secret Shopping?</h2>
+    <p>Secret shopping is straightforward: an internal employee poses as a real stakeholder and walks through a journey end-to-end, without revealing who they are or asking for special treatment. If they get stuck, that <em>is</em> the finding.</p>
+    <p>The goal is <strong>not</strong> to find code bugs — that's what QA is for. We're auditing the <em>emotional and functional integrity</em> of the experience: does it feel trustworthy, clear, and appropriately effortful? Where does it break down, confuse, or disappoint?</p>
+    <p>Every finding gets tagged with one of four observation types:</p>
+
+    <div class="taxonomy-grid">
+      <div class="taxon-card dead">
+        <div class="taxon-icon">🚧</div>
+        <div class="taxon-name">Dead End</div>
+        <div class="taxon-desc">The user has no clear next step. The journey stops. Something is missing or unreachable.</div>
+      </div>
+      <div class="taxon-card broken">
+        <div class="taxon-icon">🪟</div>
+        <div class="taxon-name">Broken Window</div>
+        <div class="taxon-desc">A small defect — a typo, a misaligned element, a slow loader — that signals a lack of care and erodes trust.</div>
+      </div>
+      <div class="taxon-card friction">
+        <div class="taxon-icon">🪚</div>
+        <div class="taxon-name">Friction</div>
+        <div class="taxon-desc">A paper cut. The task is completable, but harder than it needs to be. Too many steps, too much effort.</div>
+      </div>
+      <div class="taxon-card missed">
+        <div class="taxon-icon">✨</div>
+        <div class="taxon-name">Missed Opportunity</div>
+        <div class="taxon-desc">Everything works, but something could be genuinely better — more personal, more helpful, more memorable.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: SCORING -->
+  <div class="section">
+    <div class="section-number">Section 02</div>
+    <h2>How Shoppers Score</h2>
+    <p>Each dimension in your rubric gets a <strong>1–5 numeric score</strong> plus a tagged observation type and written notes. There is no single rollup score per journey — we keep dimension scores separate so we can pinpoint exactly what's broken rather than averaging it away.</p>
+    <p>Notes are <strong>required</strong> for any score of 1, 2, 4, or 5. A score of 3 can stand alone.</p>
+
+    <table class="score-table">
+      <thead>
+        <tr><th>Score</th><th>Meaning</th><th>Note requirement</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="score-badge s1">1 — Poor</span></td><td>Broken, missing, or actively harmful. Task may have failed.</td><td>Required: what happened, what should have happened.</td></tr>
+        <tr><td><span class="score-badge s2">2 — Below expectations</span></td><td>Works but with significant friction. Workarounds needed.</td><td>Required: describe the friction and its impact.</td></tr>
+        <tr><td><span class="score-badge s3">3 — Acceptable</span></td><td>Functional but unremarkable. Table stakes.</td><td>Optional.</td></tr>
+        <tr><td><span class="score-badge s4">4 — Good</span></td><td>Above average; better than most would deliver.</td><td>Required: what made it stand out.</td></tr>
+        <tr><td><span class="score-badge s5">5 — Excellent</span></td><td>Best-in-class. A reference example.</td><td>Required: what specifically was excellent.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3: YOUR JOURNEY -->
+  <div class="section">
+    <div class="section-number">Section 03</div>
+    <h2>Your Journey in Context</h2>
+    <p>The program covers four journeys. Yours is highlighted below. Use this to orient your thinking before you build the rubric — the key question is <em>what would break us if it failed?</em></p>
+
+    <div class="journey-tabs">
+      <div class="jtab" onclick="showJourney('employer')">Employer / HR Buyer</div>
+      <div class="jtab" onclick="showJourney('provider')">Provider</div>
+      <div class="jtab active" onclick="showJourney('admin')">Admin / Ops</div>
+      <div class="jtab" onclick="showJourney('member')">Member (reference)</div>
+    </div>
+
+    <!-- EMPLOYER -->
+    <div class="journey-panel" id="journey-employer">
+      <div class="journey-header">
+        <h3>Employer / HR Buyer Journey</h3>
+        <p>Covers the full arc from a prospect requesting a demo through an existing customer managing their account. Two sub-scenarios: Prospect and Existing Customer.</p>
+      </div>
+      <div class="scenario-block">
+        <div class="scenario-label">Prospect scenario</div>
+        <p>You are an HR Director at a 5,000-person company evaluating mental health benefits. You request a demo from the Spring Health website and go through the full sales process: first contact → discovery call → demo → proposal.</p>
+      </div>
+      <div class="scenario-block">
+        <div class="scenario-label">Existing customer scenario</div>
+        <p>You are an HR manager at an existing employer client. You log into the employer portal, pull a utilization report, and contact your CSM with a question about renewal terms.</p>
+      </div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:12px;"><strong style="color:var(--ink)">Things to consider as you build your rubric:</strong></p>
+      <ul class="questions-list">
+        <li><span class="q-num">?</span>What are the 3–5 moments in the sales process most likely to make or break a deal? Those are dimension candidates.</li>
+        <li><span class="q-num">?</span>What does a truly well-run discovery call look like vs. a pitch-only call? How would a shopper know the difference?</li>
+        <li><span class="q-num">?</span>What do employer admins try to do in the portal most often, and where do they currently get stuck?</li>
+        <li><span class="q-num">?</span>What would a great ROI report look like vs. a technically-complete-but-useless one?</li>
+        <li><span class="q-num">?</span>What's the handoff from sales to implementation like today — and what does "good" look like vs. what's the failure mode?</li>
+        <li><span class="q-num">?</span>Are there compliance or data-security touchpoints in the employer journey that shoppers should specifically probe?</li>
+      </ul>
+    </div>
+
+    <!-- PROVIDER -->
+    <div class="journey-panel" id="journey-provider">
+      <div class="journey-header">
+        <h3>Provider Journey</h3>
+        <p>Covers everything from a therapist's first contact with the credentialing process through day-to-day clinical work on the platform.</p>
+      </div>
+      <div class="scenario-block">
+        <div class="scenario-label">Scenario</div>
+        <p>You are a licensed therapist interested in joining the Spring Health network. You begin the credentialing application, go through onboarding training, and use the clinical platform to complete a simulated session workflow (where test access is available).</p>
+      </div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:12px;"><strong style="color:var(--ink)">Things to consider as you build your rubric:</strong></p>
+      <ul class="questions-list">
+        <li><span class="q-num">?</span>What is the credentialing process like today — where are the known friction points, and what would "fixed" look like?</li>
+        <li><span class="q-num">?</span>What do providers most commonly complain about in clinical tools? Those pain points should have dimensions.</li>
+        <li><span class="q-num">?</span>How should a shopper measure admin burden — what's a concrete proxy for "too much non-clinical work"?</li>
+        <li><span class="q-num">?</span>What does great onboarding training look like vs. bare-minimum? How would a shopper distinguish them?</li>
+        <li><span class="q-num">?</span>Is billing clarity a known issue? What would a shopper specifically look for to score it fairly?</li>
+        <li><span class="q-num">?</span>Are there any parts of the provider journey that only surface after weeks of use? Flag those — we may need a longer-format shop for them.</li>
+      </ul>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="journey-panel active" id="journey-admin">
+      <div class="journey-header">
+        <h3>Administrative / Ops Journey</h3>
+        <p>A set of discrete sub-shops testing our ability to respond to operational requests: medical records, billing, crisis escalation, data reporting, and complaints.</p>
+      </div>
+      <div class="scenario-block">
+        <div class="scenario-label">Sub-shops (can be split across multiple shoppers)</div>
+        <p>Submit a medical records ROI request as a member. Raise a billing dispute as a member or employer admin. Test what happens when a member indicates they are in crisis. Submit a data/reporting request as an employer admin. File a formal complaint.</p>
+      </div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:12px;"><strong style="color:var(--ink)">Things to consider as you build your rubric:</strong></p>
+      <ul class="questions-list">
+        <li><span class="q-num">?</span>For each sub-shop, what is the SLA you'd want to hold yourself to? That becomes the benchmark for a score of 3 vs. 5.</li>
+        <li><span class="q-num">?</span>What does the records request process look like today — is there a documented path, or is it ad hoc? How should a shopper find it?</li>
+        <li><span class="q-num">?</span>What's the expected crisis escalation path? The shopper should be evaluating whether it's discoverable and functional without prior knowledge.</li>
+        <li><span class="q-num">?</span>Are there compliance requirements (HIPAA, ERISA) that create hard pass/fail criteria for any of these sub-shops?</li>
+        <li><span class="q-num">?</span>Who receives a complaint today, and what is the expected response process? If that isn't documented, the rubric itself will surface a gap.</li>
+        <li><span class="q-num">?</span>Which of these sub-shops do you want to use real test accounts for vs. going fully blind? That affects scenario design.</li>
+      </ul>
+    </div>
+
+    <!-- MEMBER (reference) -->
+    <div class="journey-panel" id="journey-member">
+      <div class="journey-header">
+        <h3>Member Experience (already built — shown for reference)</h3>
+        <p>Bharat's "Walking the Care Path" model covers this journey in detail. Included here so you can see what a completed rubric looks like.</p>
+      </div>
+      <div class="scenario-block">
+        <div class="scenario-label">Scenario</div>
+        <p>You are a new employee at a Spring Health employer client, considering therapy for the first time. You have mild anxiety and some uncertainty about stigma. Walk through eligibility check → onboarding → provider search → booking → appointment → post-visit follow-up. Also audit one lifecycle email/SMS and compare one flow on web vs. mobile.</p>
+      </div>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:12px;"><strong style="color:var(--ink)">Dimensions already defined:</strong></p>
+      <ul class="questions-list">
+        <li><span class="q-num">✓</span>Eligibility check — Can member verify coverage?</li>
+        <li><span class="q-num">✓</span>Onboarding flow — Account creation &amp; assessment quality</li>
+        <li><span class="q-num">✓</span>Care matching — Quality of provider recommendations</li>
+        <li><span class="q-num">✓</span>Scheduling — Ease of booking first appointment</li>
+        <li><span class="q-num">✓</span>Reminders &amp; comms — Clarity and timing</li>
+        <li><span class="q-num">✓</span>Post-visit follow-up — Next steps surfaced after appointment</li>
+        <li><span class="q-num">✓</span>Support access — Can member reach help if stuck?</li>
+        <li><span class="q-num">✓</span>Stigma &amp; language — Tone and copy throughout</li>
+        <li><span class="q-num">✓</span>Cross-platform parity — Web vs. mobile consistency</li>
+        <li><span class="q-num">✓</span>Email / SMS quality — Lifecycle comms copy, timing, deeplinks</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4: GOOD DIMENSIONS -->
+  <div class="section">
+    <div class="section-number">Section 04</div>
+    <h2>What Makes a Good Rubric Dimension?</h2>
+    <p>Dimensions are the individual things shoppers score. A well-written dimension has three properties:</p>
+
+    <div class="rules-box">
+      <div class="rule-row">
+        <div class="rule-icon">🎯</div>
+        <div class="rule-body">
+          <strong>Observable without inside knowledge</strong>
+          <span>A shopper who knows nothing about your team should be able to evaluate it. If scoring it requires knowing your roadmap or internal architecture, rewrite it.</span>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-icon">📏</div>
+        <div class="rule-body">
+          <strong>Has a clear failure mode and a clear excellent state</strong>
+          <span>You should be able to describe, in a sentence each, what a 1 looks like and what a 5 looks like. If you can't, the dimension is too vague to score consistently.</span>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-icon">🔬</div>
+        <div class="rule-body">
+          <strong>Specific enough to route</strong>
+          <span>If a dimension scores a 1, it should be obvious which team owns the fix. "Overall experience" is too broad. "Time from demo request to first human contact" is specific enough.</span>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-icon">📦</div>
+        <div class="rule-body">
+          <strong>Scope: aim for 5–10 dimensions</strong>
+          <span>Fewer than 5 leaves too many gaps. More than 10 and shoppers lose attention. 6–8 is the sweet spot for most journeys. You can always add dimensions in a later quarter.</span>
+        </div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-icon">🚫</div>
+        <div class="rule-body">
+          <strong>Don't test what you can already measure</strong>
+          <span>If you already have a metric for it (CSAT, time-to-credential, NPS), don't make it a rubric dimension — you have the data. Secret shopping is for things that <em>don't</em> show up in dashboards.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEMPLATE -->
+  <div class="template-section">
+    <div class="template-header">
+      <div>
+        <h2>Your Rubric Template</h2>
+        <p>Fill this in and export — or copy the JSON to share with the program owner.</p>
+      </div>
+      <button class="dl-btn" onclick="window.print()">🖨 Print / Save as PDF</button>
+    </div>
+    <div class="template-body">
+
+      <div class="tmpl-field">
+        <div class="tmpl-label">Journey Name</div>
+        <select class="tmpl-input" id="tmpl-journey">
+          <option value="">Select your journey…</option>
+          <option>Employer / HR Buyer — Prospect</option>
+          <option>Employer / HR Buyer — Existing Customer</option>
+          <option>Provider</option>
+          <option selected>Administrative / Ops</option>
+        </select>
+      </div>
+
+      <div class="tmpl-field">
+        <div class="tmpl-label">Journey Owner</div>
+        <input type="text" class="tmpl-input" id="tmpl-owner" placeholder="Your name and title">
+      </div>
+
+      <div class="tmpl-field">
+        <div class="tmpl-label">Scenario Description</div>
+        <textarea class="tmpl-input" id="tmpl-scenario" placeholder="Describe the persona the shopper should adopt and the full path they should walk — start to finish. Be specific about what they should try to accomplish."></textarea>
+      </div>
+
+      <div class="tmpl-field">
+        <div class="tmpl-label">What's in Scope / Out of Scope</div>
+        <textarea class="tmpl-input" id="tmpl-scope" rows="3" placeholder="e.g. In scope: first demo request through proposal delivery. Out of scope: contract negotiation, implementation."></textarea>
+      </div>
+
+      <div class="tmpl-field" style="margin-top:28px">
+        <div class="tmpl-label">Rubric Dimensions</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">For each dimension, give it a short name, describe what to evaluate, and define what a 1 (poor) and 5 (excellent) look like. The acceptable midpoint (3) is what a functional-but-unremarkable version delivers.</p>
+
+        <div class="dim-row header-row">
+          <span>Dimension Name</span>
+          <span>What to Evaluate</span>
+          <span>1 — Poor</span>
+          <span>3 — Acceptable</span>
+          <span>5 — Excellent</span>
+        </div>
+
+        <div id="dim-rows">
+          <!-- rows injected by JS -->
+        </div>
+
+        <button class="add-dim-btn" onclick="addDimRow()">+ Add dimension</button>
+      </div>
+
+      <div class="tmpl-field">
+        <div class="tmpl-label">Hard Pass / Fail Items (optional)</div>
+        <textarea class="tmpl-input" id="tmpl-passfail" rows="3" placeholder="List any items that are automatically P1 regardless of score — e.g. 'If the shopper cannot locate the records request form at all, this is an automatic P1.'"></textarea>
+      </div>
+
+      <div class="tmpl-field">
+        <div class="tmpl-label">Notes for Shoppers</div>
+        <textarea class="tmpl-input" id="tmpl-notes" rows="3" placeholder="Anything a shopper needs to know before starting — e.g. which URL to use, which account type to simulate, whether to use a test account, what NOT to do."></textarea>
+      </div>
+
+      <div class="export-row">
+        <p class="export-note">When you're done, export as JSON to send to the program owner, or print to PDF and share the file.</p>
+        <div class="export-btns">
+          <button class="btn-copy" onclick="copyRubricJSON()">Copy JSON</button>
+          <button class="btn-export" onclick="downloadRubricJSON()">Download JSON</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── JOURNEY TABS ─────────────────────────────────────────────────────────────
+function showJourney(id) {
+  document.querySelectorAll('.journey-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.jtab').forEach(t => t.classList.remove('active'));
+  document.getElementById('journey-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── DIM ROWS ──────────────────────────────────────────────────────────────────
+let dimCount = 0;
+
+function addDimRow(name='', what='', poor='', ok='', excellent='') {
+  dimCount++;
+  const id = dimCount;
+  const wrap = document.createElement('div');
+  wrap.className = 'dim-row-wrap';
+  wrap.id = 'dimwrap-' + id;
+  wrap.innerHTML = `
+    <div class="dim-row" style="flex:1">
+      <input class="dim-input" placeholder="e.g. First response speed" value="${name}" id="dim-name-${id}">
+      <input class="dim-input" placeholder="What the shopper evaluates" value="${what}" id="dim-what-${id}">
+      <input class="dim-input" placeholder="What failure looks like" value="${poor}" id="dim-poor-${id}">
+      <input class="dim-input" placeholder="Table-stakes functional" value="${ok}" id="dim-ok-${id}">
+      <input class="dim-input" placeholder="What best-in-class looks like" value="${excellent}" id="dim-excellent-${id}">
+    </div>
+    <button class="remove-dim" onclick="removeDim(${id})" title="Remove">×</button>
+  `;
+  document.getElementById('dim-rows').appendChild(wrap);
+}
+
+function removeDim(id) {
+  const el = document.getElementById('dimwrap-' + id);
+  if (el) el.remove();
+}
+
+// seed with 4 blank rows
+[1,2,3,4].forEach(() => addDimRow());
+
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function collectRubric() {
+  const dims = [];
+  document.querySelectorAll('[id^="dimwrap-"]').forEach(wrap => {
+    const id = wrap.id.replace('dimwrap-','');
+    const name = document.getElementById('dim-name-' + id)?.value.trim();
+    if (!name) return;
+    dims.push({
+      dimension: name,
+      whatToEvaluate: document.getElementById('dim-what-' + id)?.value.trim(),
+      score1_poor: document.getElementById('dim-poor-' + id)?.value.trim(),
+      score3_acceptable: document.getElementById('dim-ok-' + id)?.value.trim(),
+      score5_excellent: document.getElementById('dim-excellent-' + id)?.value.trim(),
+    });
+  });
+  return {
+    journey: document.getElementById('tmpl-journey').value,
+    owner: document.getElementById('tmpl-owner').value.trim(),
+    scenario: document.getElementById('tmpl-scenario').value.trim(),
+    scope: document.getElementById('tmpl-scope').value.trim(),
+    hardPassFail: document.getElementById('tmpl-passfail').value.trim(),
+    notesForShoppers: document.getElementById('tmpl-notes').value.trim(),
+    dimensions: dims,
+    submittedAt: new Date().toISOString(),
+  };
+}
+
+function copyRubricJSON() {
+  const json = JSON.stringify(collectRubric(), null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    toast("Rubric JSON copied to clipboard — paste into email or share with program owner");
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = json; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    toast("Copied to clipboard");
+  });
+}
+
+function downloadRubricJSON() {
+  const rubric = collectRubric();
+  if (!rubric.journey) { toast("Please select your journey first"); return; }
+  const json = JSON.stringify(rubric, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'rubric_' + rubric.journey.replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.json';
+  a.click();
+  toast("Downloaded — send to program owner");
+}
+
+
+// Auto-select this journey's tab on load
+window.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('tmpl-journey').value = 'Administrative / Ops';
+});
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
